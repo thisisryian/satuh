@@ -19,6 +19,7 @@ class auth
     protected $tokenId;
     protected $username;
     protected $password;
+    protected $oauthCode;
     /**
      * Create a new OAuthCredentials.
      *
@@ -203,8 +204,12 @@ class auth
         $this->password = $password;
     }
 
+    public function setOauthCode($code){
+        $this->oauthCode = $code;
+    }
 
-    public function getAccessToken($grant_type,$code){
+
+    public function getAccessToken($grant_type){
         $params = [
             'client_id' => $this->getClientId(),
             'client_secret' => $this->getClientSecret(),
@@ -223,8 +228,9 @@ class auth
         }else if($grant_type == 'client'){
             $params['grant_type'] = 'client_credentials';
         }else {
+            if (empty($this->code)) throw new \InvalidArgumentException("Oauth Code is not specified");
             $params['grant_type'] = 'token';
-            $params['code'] = $code;
+            $params['code'] = $this->oauthCode;
         }
 
         $this->setupCurl();

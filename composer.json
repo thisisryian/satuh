@@ -1,0 +1,19 @@
+{
+    "name": "pmb/satuh",
+    "description": "Satuh Applicaiton",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/psr7": "^1.4",
+        "php": ">=7.0"
+    },
+    "authors": [
+        {
+            "name": "PMB",
+            "email": "devsdk@pmberjaya.com"
+        }
+    ],
+    "minimum-stability": "dev-master",
+    "autoload": {
+        "psr-4": {"satuh\\": "src/satuh"}
+    }
+}

@@ -13,6 +13,8 @@ class notification
     const updateIosToken_URI = "https://account.satuh.com/api/push-notification/update-ios-token";
     const sendNotificationProject_URI = "https://account.satuh.com/api/push-notification/send-notification-project";
     protected $accessToken = null;
+    protected $client_id;
+    protected $client_secret;
     
 
     public $headers = array(
@@ -77,7 +79,7 @@ class notification
     public function insertAndroidToken($fcm_id,$project,$account_id = null){
         if (!$fcm_id) throw new \InvalidArgumentException("fcm_id is not specified");
         if (!$project) throw new \InvalidArgumentException("project is not specified");
-        
+        $this->authorization();
         $token_data = [
             'fcm_id' => $fcm_id,
             'project' => $project,
@@ -126,7 +128,6 @@ class notification
         $token_data =[
             'account_id' => $account_id,
         ];
-
         $this->setupCurl();
         $this->curlSetPost(self::updateIosToken_URI."/".$token,$token_data);
         $response = json_decode($this->exec(),true);

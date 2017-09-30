@@ -2,8 +2,7 @@
 namespace satuh;
 use InvalidArgumentException;
 use Exception;
-use GuzzleHttp\Exception\BadResponseException as GuzzleException;
-
+use satuh\auth;
 class notification
 {
     protected $curlHandle;
@@ -22,11 +21,22 @@ class notification
 
     );
 
-    function __construct($access_token)
+    function __construct($client_id,$client_secret)
     {
-        if (empty($this->accessToken))throw new \InvalidArgumentException("Please configured your access token");
-        $this->headers[0] .= "Bearer ".urlencode($this->accessToken);
+        if (empty($client_id)) throw new \InvalidArgumentException("Client Id is not specified");
+        if (empty($client_secret)) throw new \InvalidArgumentException("Client Secret is not specified");
+
+        $this->clientId = $client_id;
+        $this->clientSecret = $client_secret;
         $this->curlHandle = curl_init();
+    }
+
+    private function authorization(){
+        $satuh = new auth($this->clientId,$this->clientSecret);
+        $response = $satuh->getAccessToken('client');
+        if(isset($response['access_token'])){
+            $this->accessToken = $response['access_token'];
+        }
     }
 
     protected function curlSetGet($url)
@@ -44,6 +54,8 @@ class notification
     }
 
     private function setupCurl(){
+        if (empty($this->accessToken))throw new \InvalidArgumentException("Please configured your access token");
+        $this->headers[0] .= "Bearer ".urlencode($this->accessToken);
         curl_setopt( $this->curlHandle, CURLOPT_HTTPHEADER, $this->headers);
         curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, true );
     }
@@ -80,7 +92,8 @@ class notification
     public function insertIosToken($apns_id,$project,$account_id = null){
         if (empty($apns_id)) throw new \InvalidArgumentException("Ios Token is not specified");
         if (empty($project)) throw new \InvalidArgumentException("Project is not specified");
-        
+
+        $this->authorization();
         $token_data =[
             'apns_id' => $apns_id,
             'project' => $project,
@@ -95,7 +108,7 @@ class notification
     public function updateAndroidToken($token,$account_id){
         if (empty($token)) throw new \InvalidArgumentException("Android Token is not specified");
         if (empty($account_id)) throw new \InvalidArgumentException("Account Id is not specified");
-        
+        $this->authorization();
         $token_data =[
 
             'account_id' => $account_id,
@@ -109,6 +122,7 @@ class notification
     public function updateIosToken($token,$account_id){
         if (empty($token)) throw new \InvalidArgumentException("Android Token is not specified");
         if (empty($acount_id)) throw new \InvalidArgumentException("Account Id is not specified");
+        $this->authorization();
         $token_data =[
             'account_id' => $account_id,
         ];
@@ -122,7 +136,7 @@ class notification
     public function sendNotificationProject($project,$content){
         if (empty($project)) throw new \InvalidArgumentException("Project is not specified");
         if (empty($content)) throw new \InvalidArgumentException("Please set your content message");
-        
+        $this->authorization();
         $push_notification =[
             'project' => $project,
             'content' => $content

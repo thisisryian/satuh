@@ -180,19 +180,19 @@ class auth
 
 
     public function authorize($response_type){
-            $config = [
-                'client_id' => $this->getClientId(),
-                'redirect_uri' => $this->getRedirectUri(),
-                'response_type' => $response_type,
-                'scope' => '',
-            ];
+        $config = [
+            'client_id' => $this->getClientId(),
+            'redirect_uri' => $this->getRedirectUri(),
+            'response_type' => $response_type,
+            'scope' => '',
+        ];
 
-            $query = https_build_query(
-                $config
-            );
-            $url = self::AUTHO_URI."?".$query;
-            header( "Location: {$url}" );
-            exit();
+        $query = http_build_query(
+            $config
+        );
+        $url = self::AUTHO_URI."?".$query;
+        header( "Location: {$url}" );
+        exit();
 
     }
 

@@ -12,6 +12,8 @@ class notification
     const updateAndroidToken_URI = "https://account.satuh.com/api/push-notification/update-android-token";
     const updateIosToken_URI = "https://account.satuh.com/api/push-notification/update-ios-token";
     const sendNotificationProject_URI = "https://account.satuh.com/api/push-notification/send-notification-project";
+    const sendAndroidNotification_URI = "https://account.satuh.com/api/push-notification/send-notification-android";
+    const sendIosNotification_URI = "https://account.satuh.com/api/push-notification/send-notification-ios";
     protected $accessToken = null;
     protected $client_id;
     protected $client_secret;
@@ -25,12 +27,13 @@ class notification
 
     function __construct($client_id,$client_secret)
     {
-        if (empty($client_id)) throw new \InvalidArgumentException("Client Id is not specified");
-        if (empty($client_secret)) throw new \InvalidArgumentException("Client Secret is not specified");
+        if (empty($client_id)) throw new InvalidArgumentException("Client Id is not specified");
+        if (empty($client_secret)) throw new InvalidArgumentException("Client Secret is not specified");
 
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
         $this->curlHandle = curl_init();
+        $this->authorization();
     }
 
     private function authorization(){
@@ -56,7 +59,7 @@ class notification
     }
 
     private function setupCurl(){
-        if (empty($this->accessToken))throw new \InvalidArgumentException("Please configured your access token");
+        if (empty($this->accessToken))throw new InvalidArgumentException("Please configured your access token");
         $this->headers[0] .= "Bearer ".urlencode($this->accessToken);
         curl_setopt( $this->curlHandle, CURLOPT_HTTPHEADER, $this->headers);
         curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, true );
@@ -77,9 +80,9 @@ class notification
     }
 
     public function insertAndroidToken($fcm_id,$project,$account_id = null){
-        if (!$fcm_id) throw new \InvalidArgumentException("fcm_id is not specified");
-        if (!$project) throw new \InvalidArgumentException("project is not specified");
-        $this->authorization();
+        if (!$fcm_id) throw new InvalidArgumentException("fcm_id is not specified");
+        if (!$project) throw new InvalidArgumentException("project is not specified");
+
         $token_data = [
             'fcm_id' => $fcm_id,
             'project' => $project,
@@ -92,10 +95,10 @@ class notification
     }
 
     public function insertIosToken($apns_id,$project,$account_id = null){
-        if (empty($apns_id)) throw new \InvalidArgumentException("Ios Token is not specified");
-        if (empty($project)) throw new \InvalidArgumentException("Project is not specified");
+        if (empty($apns_id)) throw new InvalidArgumentException("Ios Token is not specified");
+        if (empty($project)) throw new InvalidArgumentException("Project is not specified");
 
-        $this->authorization();
+
         $token_data =[
             'apns_id' => $apns_id,
             'project' => $project,
@@ -108,11 +111,9 @@ class notification
     }
 
     public function updateAndroidToken($token,$account_id){
-        if (empty($token)) throw new \InvalidArgumentException("Android Token is not specified");
-        if (empty($account_id)) throw new \InvalidArgumentException("Account Id is not specified");
-        $this->authorization();
+        if (empty($token)) throw new InvalidArgumentException("Android Token is not specified");
+        if (empty($account_id)) throw new InvalidArgumentException("Account Id is not specified");
         $token_data =[
-
             'account_id' => $account_id,
         ];
         $this->setupCurl();
@@ -122,9 +123,9 @@ class notification
     }
 
     public function updateIosToken($token,$account_id){
-        if (empty($token)) throw new \InvalidArgumentException("Android Token is not specified");
-        if (empty($acount_id)) throw new \InvalidArgumentException("Account Id is not specified");
-        $this->authorization();
+        if (empty($token)) throw new InvalidArgumentException("Android Token is not specified");
+        if (empty($acount_id)) throw new InvalidArgumentException("Account Id is not specified");
+
         $token_data =[
             'account_id' => $account_id,
         ];
@@ -135,15 +136,41 @@ class notification
     }
 
     public function sendNotificationProject($project,$content){
-        if (empty($project)) throw new \InvalidArgumentException("Project is not specified");
-        if (empty($content)) throw new \InvalidArgumentException("Please set your content message");
-        $this->authorization();
+        if (empty($project)) throw new InvalidArgumentException("Project is not specified");
+        if (empty($content)) throw new InvalidArgumentException("Please set your content message");
+
         $push_notification =[
             'project' => $project,
             'content' => $content
         ];
         $this->setupCurl();
         $this->curlSetPost(self::sendNotificationProject_URI,$push_notification);
+        $response = json_decode($this->exec(),true);
+        return $response;
+    }
+
+    public function sendAndroidNotification($token,$content){
+        if (empty($token)) throw new InvalidArgumentException("token is not specified");
+        if (empty($content)) throw new InvalidArgumentException("Please set your content message");
+        $push_notification =[
+            'token' => $token,
+            'content' => $content
+        ];
+        $this->setupCurl();
+        $this->curlSetPost(self::sendAndroidNotification_URI,$push_notification);
+        $response = json_decode($this->exec(),true);
+        return $response;
+    }
+
+    public function sendIosNotification($token,$content){
+        if (empty($token)) throw new InvalidArgumentException("token is not specified");
+        if (empty($content)) throw new InvalidArgumentException("Please set your content message");
+        $push_notification =[
+            'token' => $token,
+            'content' => $content
+        ];
+        $this->setupCurl();
+        $this->curlSetPost(self::sendIosNotification_URI,$push_notification);
         $response = json_decode($this->exec(),true);
         return $response;
     }

@@ -141,7 +141,7 @@ class notification
 
         $push_notification =[
             'project' => $project,
-            'content' => $content
+            'content' => http_build_query($content)
         ];
         $this->setupCurl();
         $this->curlSetPost(self::sendNotificationProject_URI,$push_notification);
@@ -154,7 +154,7 @@ class notification
         if (empty($content)) throw new InvalidArgumentException("Please set your content message");
         $push_notification =[
             'token' => $token,
-            'content' => $content
+            'content' => http_build_query($content)
         ];
         $this->setupCurl();
         $this->curlSetPost(self::sendAndroidNotification_URI,$push_notification);
@@ -167,7 +167,7 @@ class notification
         if (empty($content)) throw new InvalidArgumentException("Please set your content message");
         $push_notification =[
             'token' => $token,
-            'content' => $content
+            'content' => http_build_query($content)
         ];
         $this->setupCurl();
         $this->curlSetPost(self::sendIosNotification_URI,$push_notification);

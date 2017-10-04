@@ -87,6 +87,7 @@ class auth
 
         }
         curl_setopt( $this->curlHandle, CURLOPT_HTTPHEADER, $this->_defaultHeaders);
+        curl_setopt($this->curlHandle, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, true );
     }
 

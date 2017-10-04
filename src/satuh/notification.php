@@ -62,7 +62,9 @@ class notification
         if (empty($this->accessToken))throw new InvalidArgumentException("Please configured your access token");
         $this->headers[0] .= "Bearer ".urlencode($this->accessToken);
         curl_setopt( $this->curlHandle, CURLOPT_HTTPHEADER, $this->headers);
+        curl_setopt($this->curlHandle, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, true );
+
     }
 
     protected function exec()

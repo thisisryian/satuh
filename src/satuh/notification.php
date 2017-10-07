@@ -14,6 +14,7 @@ class notification
     const sendNotificationProject_URI = "https://account.satuh.com/api/push-notification/send-notification-project";
     const sendAndroidNotification_URI = "https://account.satuh.com/api/push-notification/send-notification-android";
     const sendIosNotification_URI = "https://account.satuh.com/api/push-notification/send-notification-ios";
+    const deleteAndroidToken_URI = "https://account.satuh.com/api/push-notification/delete-android-token";
     protected $accessToken = null;
     protected $client_id;
     protected $client_secret;
@@ -119,7 +120,7 @@ class notification
             'account_id' => $account_id,
         ];
         $this->setupCurl();
-        $this->curlSetPost(self::updateAndroidToken_URI."/".$token,$token_data);
+        $this->curlSetPost(self::updateAndroidToken_URI."/".urlencode($token),$token_data);
         $response = json_decode($this->exec(),true);
         return $response;
     }
@@ -132,7 +133,7 @@ class notification
             'account_id' => $account_id,
         ];
         $this->setupCurl();
-        $this->curlSetPost(self::updateIosToken_URI."/".$token,$token_data);
+        $this->curlSetPost(self::updateIosToken_URI."/".urlencode($token),$token_data);
         $response = json_decode($this->exec(),true);
         return $response;
     }
@@ -173,6 +174,20 @@ class notification
         ];
         $this->setupCurl();
         $this->curlSetPost(self::sendIosNotification_URI,$push_notification);
+        $response = json_decode($this->exec(),true);
+        return $response;
+    }
+
+    public function deleteAndroidToken($token,$project,$account_id = null){
+        if (!$token) throw new InvalidArgumentException("token is not specified");
+        if (!$project) throw new InvalidArgumentException("project is not specified");
+
+        $token_data = [
+            'project' => $project,
+            'account_id' => $account_id,
+        ];
+        $this->setupCurl();
+        $this->curlSetPost(self::deleteAndroidToken_URI.'/'.urlencode($token),($token_data));
         $response = json_decode($this->exec(),true);
         return $response;
     }

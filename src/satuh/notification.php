@@ -7,13 +7,10 @@ class notification
 {
     protected $curlHandle;
     const TOKEN_URI = "https://account.satuh.com/oauth/token";
-    const insertAndroidToken_URI = "https://account.satuh.com/api/push-notification/insert-android-token";
-    const insertIosToken_URI = "https://account.satuh.com/api/push-notification/insert-ios-token";
+    const insertToken_URI = "https://account.satuh.com/api/push-notification/insert-android-token";
     const updateAndroidToken_URI = "https://account.satuh.com/api/push-notification/update-android-token";
-    const updateIosToken_URI = "https://account.satuh.com/api/push-notification/update-ios-token";
+
     const sendNotificationProject_URI = "https://account.satuh.com/api/push-notification/send-notification-project";
-    const sendAndroidNotification_URI = "https://account.satuh.com/api/push-notification/send-notification-android";
-    const sendIosNotification_URI = "https://account.satuh.com/api/push-notification/send-notification-ios";
     const deleteAndroidToken_URI = "https://account.satuh.com/api/push-notification/delete-android-token";
     protected $accessToken = null;
     protected $client_id;
@@ -82,58 +79,30 @@ class notification
         return $this->accessToken;
     }
 
-    public function insertAndroidToken($fcm_id,$project,$account_id = null){
-        if (!$fcm_id) throw new InvalidArgumentException("fcm_id is not specified");
+    public function insertToken($token,$project,$account_id = null){
+        if (!$token) throw new InvalidArgumentException("token is not specified");
         if (!$project) throw new InvalidArgumentException("project is not specified");
 
         $token_data = [
-            'fcm_id' => $fcm_id,
+            'fcm_id' => $token,
             'project' => $project,
             'account_id' => $account_id,
         ];
         $this->setupCurl();
-        $this->curlSetPost(self::insertAndroidToken_URI,($token_data));
+        $this->curlSetPost(self::insertToken_URI,($token_data));
         $response = json_decode($this->exec(),true);
         return $response;
     }
+    
 
-    public function insertIosToken($apns_id,$project,$account_id = null){
-        if (empty($apns_id)) throw new InvalidArgumentException("Ios Token is not specified");
-        if (empty($project)) throw new InvalidArgumentException("Project is not specified");
-
-
-        $token_data =[
-            'apns_id' => $apns_id,
-            'project' => $project,
-            'account_id' => $account_id,
-        ];
-        $this->setupCurl();
-        $this->curlSetPost(self::insertIosToken_URI,$token_data);
-        $response = json_decode($this->exec(),true);
-        return $response;
-    }
-
-    public function updateAndroidToken($token,$account_id){
-        if (empty($token)) throw new InvalidArgumentException("Android Token is not specified");
+    public function updateToken($token,$account_id){
+        if (empty($token)) throw new InvalidArgumentException("Token is not specified");
         if (empty($account_id)) throw new InvalidArgumentException("Account Id is not specified");
         $token_data =[
             'account_id' => $account_id,
         ];
         $this->setupCurl();
         $this->curlSetPost(self::updateAndroidToken_URI."/".urlencode($token),$token_data);
-        $response = json_decode($this->exec(),true);
-        return $response;
-    }
-
-    public function updateIosToken($token,$account_id){
-        if (empty($token)) throw new InvalidArgumentException("Android Token is not specified");
-        if (empty($acount_id)) throw new InvalidArgumentException("Account Id is not specified");
-
-        $token_data =[
-            'account_id' => $account_id,
-        ];
-        $this->setupCurl();
-        $this->curlSetPost(self::updateIosToken_URI."/".urlencode($token),$token_data);
         $response = json_decode($this->exec(),true);
         return $response;
     }
@@ -152,33 +121,23 @@ class notification
         return $response;
     }
 
-    public function sendAndroidNotification($token,$content){
-        if (empty($token)) throw new InvalidArgumentException("token is not specified");
+    public function sendPersonalNotification($project,$content,$account_id){
+        if (empty($project)) throw new InvalidArgumentException("Project is not specified");
         if (empty($content)) throw new InvalidArgumentException("Please set your content message");
+        if (empty($account_id)) throw new InvalidArgumentException("Account Id is not specified");
+
         $push_notification =[
-            'token' => $token,
-            'content' => http_build_query($content)
+            'project' => $project,
+            'content' => http_build_query($content),
+            'account_id' => $account_id,
         ];
         $this->setupCurl();
-        $this->curlSetPost(self::sendAndroidNotification_URI,$push_notification);
+        $this->curlSetPost(self::sendNotificationProject_URI,$push_notification);
         $response = json_decode($this->exec(),true);
         return $response;
     }
-
-    public function sendIosNotification($token,$content){
-        if (empty($token)) throw new InvalidArgumentException("token is not specified");
-        if (empty($content)) throw new InvalidArgumentException("Please set your content message");
-        $push_notification =[
-            'token' => $token,
-            'content' => http_build_query($content)
-        ];
-        $this->setupCurl();
-        $this->curlSetPost(self::sendIosNotification_URI,$push_notification);
-        $response = json_decode($this->exec(),true);
-        return $response;
-    }
-
-    public function deleteAndroidToken($token,$project,$account_id = null){
+  
+    public function deleteToken($token,$project,$account_id = null){
         if (!$token) throw new InvalidArgumentException("token is not specified");
         if (!$project) throw new InvalidArgumentException("project is not specified");
 

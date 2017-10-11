@@ -229,7 +229,7 @@ class auth
         }else if($grant_type == 'client'){
             $params['grant_type'] = 'client_credentials';
         }else {
-            if (empty($this->code)) throw new \InvalidArgumentException("Oauth Code is not specified");
+            if (empty($this->oauthCode)) throw new \InvalidArgumentException("Oauth Code is not specified");
             $params['grant_type'] = 'token';
             $params['code'] = $this->oauthCode;
         }

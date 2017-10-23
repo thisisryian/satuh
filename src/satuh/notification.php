@@ -8,10 +8,8 @@ class notification
     protected $curlHandle;
     const TOKEN_URI = "https://account.satuh.com/oauth/token";
     const insertToken_URI = "https://account.satuh.com/api/push-notification/insert-android-token";
-    const updateAndroidToken_URI = "https://account.satuh.com/api/push-notification/update-android-token";
-
     const sendNotificationProject_URI = "https://account.satuh.com/api/push-notification/send-notification-project";
-    const deleteAndroidToken_URI = "https://account.satuh.com/api/push-notification/delete-android-token";
+    const deleteToken_URI = "https://account.satuh.com/api/push-notification/delete-token";
     protected $accessToken = null;
     protected $client_id;
     protected $client_secret;
@@ -95,18 +93,6 @@ class notification
     }
     
 
-    public function updateToken($token,$account_id){
-        if (empty($token)) throw new InvalidArgumentException("Token is not specified");
-        if (empty($account_id)) throw new InvalidArgumentException("Account Id is not specified");
-        $token_data =[
-            'account_id' => $account_id,
-        ];
-        $this->setupCurl();
-        $this->curlSetPost(self::updateAndroidToken_URI."/".urlencode($token),$token_data);
-        $response = json_decode($this->exec(),true);
-        return $response;
-    }
-
     public function sendNotificationProject($project,$content){
         if (empty($project)) throw new InvalidArgumentException("Project is not specified");
         if (empty($content)) throw new InvalidArgumentException("Please set your content message");
@@ -146,7 +132,7 @@ class notification
             'account_id' => $account_id,
         ];
         $this->setupCurl();
-        $this->curlSetPost(self::deleteAndroidToken_URI.'/'.urlencode($token),($token_data));
+        $this->curlSetPost(self::deleteToken_URI.'/'.urlencode($token),($token_data));
         $response = json_decode($this->exec(),true);
         return $response;
     }

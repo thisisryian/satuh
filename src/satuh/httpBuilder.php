@@ -4,38 +4,68 @@ class httpBuilder{
 
 
     protected $curlHandle;
-    public $headers = array(
-        'Authorization: ',
-        'Accept: application/json'
+    protected $asArray = true;
+    protected $asJson;
+    public $headers;
+    public $httpCode;
 
-    );
-    function __construct($access_token = null)
+    public function __construct()
     {
-        if(!empty($access_token)){
-            $this->headers[0] .= "Bearer ".urlencode($access_token);
-        }
+        $this->curlHandle = curl_init();
+    }
+
+    private function setCurl(){
         curl_setopt( $this->curlHandle, CURLOPT_HTTPHEADER, $this->headers);
         curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, true );
-        $this->curlHandle = curl_init();
+        curl_setopt($this->curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+    }
+
+    public function setHeaders($headers){
+        $this->headers = $headers;
+    }
+
+    public function asArray(){
+        $this->asArray = true;
+        $this->asJson = false;
+    }
+
+    public function asJson(){
+        $this->asArray = false;
+        $this->asJson = true;
+    }
+
+    public function test(){
+        return "sini";
     }
 
     public function get($uri){
 
+        $this->setCurl();
         curl_setopt( $this->curlHandle, CURLOPT_HTTPGET, 1 );
         curl_setopt($this->curlHandle,CURLOPT_URL,$uri);
-        curl_exec($this->curlHandle);
-        $response = json_decode(curl_exec($this->curlHandle));
-        return $response;
+        return $this->returnResponse();
     }
 
-
-    protected function post($uri,$array_post)
+    public function post($uri,$array_post)
     {
+        $this->setCurl();
         curl_setopt( $this->curlHandle, CURLOPT_POST, 1 );
         curl_setopt($this->curlHandle,CURLOPT_URL,$uri);
         curl_setopt($this->curlHandle,CURLOPT_POSTFIELDS, $array_post);
-        $response = json_decode(curl_exec($this->curlHandle));
-        return $response;
+        return $this->returnResponse();
     }
+
+    protected function returnResponse(){
+        if($this->asJson){
+            return curl_exec($this->curlHandle);
+        }
+        $this->httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
+        return json_decode(curl_exec($this->curlHandle));
+    }
+
+    public function getHttpCode(){
+        return $this->httpCode;
+    }
+
 
 }

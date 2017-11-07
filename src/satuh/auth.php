@@ -4,9 +4,9 @@ use InvalidArgumentException;
 use Guzzlehttps\Psr7;
 use Guzzlehttps\Exception\BadResponseException as GuzzleException;
 use Exception;
+use httpBuilder;
 class auth
 {
-    protected $curlHandle;
     const AUTHO_URI = "https://account.satuh.com/oauth/authorize";
     const TOKEN_URI = "https://account.satuh.com/oauth/token";
     const USER_URI = "https://account.satuh.com/api/user";
@@ -20,6 +20,7 @@ class auth
     protected $username;
     protected $password;
     protected $oauthCode;
+    protected $httpBuilder;
     /**
      * Create a new OAuthCredentials.
      *
@@ -46,13 +47,13 @@ class auth
      * @param array $config Configuration array
      */
 
-    public $_defaultHeaders = array(
+    protected $defaultHeaders = array(
         'Authorization: ',
         'Accept: application/json'
 
     );
 
-    function __construct($client_id = null,$client_secret=null,$redirect_uri=null)
+    public function __construct($client_id = null,$client_secret=null,$redirect_uri=null)
     {
         if(!empty($client_id)){
             $this->clientId = $client_id;
@@ -63,40 +64,16 @@ class auth
         if(!empty($redirect_uri)){
             $this->redirectUri = $redirect_uri;
         }
-
-        $this->curlHandle = curl_init();
+        $this->httpBuilder = new httpBuilder();
 
     }
 
-    protected function curlSetGet($url)
-    {
-        curl_setopt( $this->curlHandle, CURLOPT_HTTPGET, 1 );
-        curl_setopt($this->curlHandle,CURLOPT_URL,$url);
-    }
-
-    protected function curlSetPost($url,$params)
-    {
-        curl_setopt( $this->curlHandle, CURLOPT_POST, 1 );
-        curl_setopt($this->curlHandle,CURLOPT_URL,$url);
-        curl_setopt($this->curlHandle,CURLOPT_POSTFIELDS, $params);
-    }
-
-    private function setupCurl($authorization = null){
+    public function setAuthorization($authorization){
         if($authorization != null){
-            $this->_defaultHeaders[0] .= "Bearer ".urlencode($authorization);
-
+            $this->defaultHeaders[0] .= "Bearer ".urlencode($authorization);
         }
-        curl_setopt( $this->curlHandle, CURLOPT_HTTPHEADER, $this->_defaultHeaders);
-        curl_setopt($this->curlHandle, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, true );
     }
-
-    protected function exec()
-    {
-        $result = curl_exec($this->curlHandle);
-        return $result;
-    }
-
+    
 
     private function isAbsoluteUri($uri)
     {
@@ -135,8 +112,6 @@ class auth
     public function setRedirectUri($uri = null){
         if (is_null($uri)) {
             $this->redirectUri = null;
-
-            return;
         }
         // redirect URI must be absolute
         if (!$this->isAbsoluteUri($uri)) {
@@ -233,18 +208,17 @@ class auth
             $params['grant_type'] = 'authorization_code';
             $params['code'] = $this->oauthCode;
         }
-
-        $this->setupCurl();
-        $this->curlSetPost(self::TOKEN_URI,$params);
-
-        $response = $this->exec();
-
+        
+        $this->httpBuilder->setHeaders($this->defaultHeaders);
+        $this->httpBuilder->asJson();
+        $response = $this->httpBuilder->post(self::TOKEN_URI,$params);
         $data = json_decode($response,true);
 
-        $httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
+        $httpCode = $this->httpBuilder->getHttpCode();
         if ($httpCode >= 400) throw  new Exception( implode("\n",$data) ? : $response,$httpCode);
         if(isset($data['access_token'])){
             $this->accessToken = $data["access_token"];
+            $this->setAuthorization($data['access_token']);
         }
         $data['status'] = true;
         return $data;
@@ -255,20 +229,18 @@ class auth
         $this->accessToken = $access_token;
     }
 
-
     public function getUserData($accessToken){
-        $this->setupCurl($accessToken);
-        $this->curlSetGet(self::USER_URI);
-        $res=$this->exec();
-        $res = json_decode($res,true);
+        $this->setAuthorization($accessToken);
+        $this->httpBuilder->setHeaders($this->defaultHeaders);
+        $res = $this->httpBuilder->get(self::USER_URI);
         $res['status'] = true;
         return $res;
     }
 
     public function logout(){
-        $this->setupCurl($this->accessToken);
-        $this->curlSetGet(self::LOGOUT_URI);
-        return $this->exec();
+        $this->httpBuilder->setHeaders($this->defaultHeaders);
+        $res = $this->httpBuilder->get(self::LOGOUT_URI);
+        return $res;
     }
 
 }

@@ -3,19 +3,20 @@ namespace satuh;
 use InvalidArgumentException;
 use Exception;
 use satuh\auth;
+use httpBuilder;
 class notification
 {
-    protected $curlHandle;
     const TOKEN_URI = "https://account.satuh.com/oauth/token";
     const insertToken_URI = "https://account.satuh.com/api/push-notification/insert-android-token";
     const sendNotificationProject_URI = "https://account.satuh.com/api/push-notification/send-notification-project";
     const deleteToken_URI = "https://account.satuh.com/api/push-notification/delete-token";
     protected $accessToken = null;
-    protected $client_id;
-    protected $client_secret;
+    protected $clientId;
+    protected $clientSecret;
+    protected $httpBuilder;
     
 
-    public $headers = array(
+    public $defaultHeaders = array(
         'Authorization: ',
         'Accept: application/json'
 
@@ -29,6 +30,7 @@ class notification
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
         $this->curlHandle = curl_init();
+        $this->httpBuilder = new httpBuilder();
         $this->authorization();
     }
 
@@ -37,36 +39,9 @@ class notification
         $response = $satuh->getAccessToken('client');
         if(isset($response['access_token'])){
             $this->accessToken = $response['access_token'];
+            $this->defaultHeaders[0] .= "Bearer ".urlencode($this->accessToken);
         }
-    }
-
-    protected function curlSetGet($url)
-    {
-
-        curl_setopt( $this->curlHandle, CURLOPT_HTTPGET, 1 );
-        curl_setopt($this->curlHandle,CURLOPT_URL,$url);
-    }
-
-    protected function curlSetPost($url,$params)
-    {
-        curl_setopt( $this->curlHandle, CURLOPT_POST, 1 );
-        curl_setopt($this->curlHandle,CURLOPT_URL,$url);
-        curl_setopt($this->curlHandle,CURLOPT_POSTFIELDS, $params);
-    }
-
-    private function setupCurl(){
-        if (empty($this->accessToken))throw new InvalidArgumentException("Please configured your access token");
-        $this->headers[0] .= "Bearer ".urlencode($this->accessToken);
-        curl_setopt( $this->curlHandle, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($this->curlHandle, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, true );
-
-    }
-
-    protected function exec()
-    {
-        $result = curl_exec($this->curlHandle);
-        return $result;
+        $this->httpBuilder->setHeaders($this->defaultHeaders);
     }
 
     public function setAccessToken($access_token){
@@ -86,9 +61,7 @@ class notification
             'project' => $project,
             'account_id' => $account_id,
         ];
-        $this->setupCurl();
-        $this->curlSetPost(self::insertToken_URI,($token_data));
-        $response = json_decode($this->exec(),true);
+        $response = $this->httpBuilder->post(self::insertToken_URI,($token_data));
         return $response;
     }
     
@@ -101,9 +74,7 @@ class notification
             'project' => $project,
             'content' => http_build_query($content)
         ];
-        $this->setupCurl();
-        $this->curlSetPost(self::sendNotificationProject_URI,$push_notification);
-        $response = json_decode($this->exec(),true);
+        $response = $this->httpBuilder->post(self::sendNotificationProject_URI,$push_notification);
         return $response;
     }
 
@@ -117,9 +88,7 @@ class notification
             'content' => http_build_query($content),
             'account_id' => $account_id,
         ];
-        $this->setupCurl();
-        $this->curlSetPost(self::sendNotificationProject_URI,$push_notification);
-        $response = json_decode($this->exec(),true);
+        $response = $this->httpBuilder->post(self::sendNotificationProject_URI,$push_notification);
         return $response;
     }
   
@@ -131,9 +100,7 @@ class notification
             'project' => $project,
             'account_id' => $account_id,
         ];
-        $this->setupCurl();
-        $this->curlSetPost(self::deleteToken_URI.'/'.urlencode($token),($token_data));
-        $response = json_decode($this->exec(),true);
+        $response = $this->httpBuilder->post(self::deleteToken_URI.'/'.urlencode($token),($token_data));
         return $response;
     }
 }

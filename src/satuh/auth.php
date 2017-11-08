@@ -72,6 +72,7 @@ class auth
         if($authorization != null){
             $this->defaultHeaders[0] .= "Bearer ".urlencode($authorization);
         }
+        $this->httpBuilder->setHeaders();
     }
     
 

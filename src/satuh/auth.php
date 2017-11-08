@@ -218,9 +218,8 @@ class auth
         if ($httpCode >= 400) throw  new Exception( implode("\n",$data) ? : $response,$httpCode);
         if(isset($data['access_token'])){
             $this->accessToken = $data["access_token"];
-            $this->setAuthorization($data['access_token']);
         }
-        $this->httpBuilder->asArray();
+
         $data['status'] = true;
         return $data;
 

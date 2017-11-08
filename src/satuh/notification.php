@@ -66,27 +66,35 @@ class notification
     }
     
 
-    public function sendNotificationProject($project,$content){
+    public function sendNotificationProject($project,$content,$server_key,$server_id){
         if (empty($project)) throw new InvalidArgumentException("Project is not specified");
         if (empty($content)) throw new InvalidArgumentException("Please set your content message");
+        if (empty($server_key)) throw new InvalidArgumentException("Server Key is not specified");
+        if (empty($server_id)) throw new InvalidArgumentException("Server Id is not specified");
 
         $push_notification =[
             'project' => $project,
-            'content' => http_build_query($content)
+            'content' => http_build_query($content),
+            'server_id' => $server_id,
+            'server_key' => $server_key
         ];
         $response = $this->httpBuilder->post(self::sendNotificationProject_URI,$push_notification);
         return $response;
     }
 
-    public function sendPersonalNotification($project,$content,$account_id){
+    public function sendPersonalNotification($project,$content,$account_id,$server_key,$server_id){
         if (empty($project)) throw new InvalidArgumentException("Project is not specified");
         if (empty($content)) throw new InvalidArgumentException("Please set your content message");
         if (empty($account_id)) throw new InvalidArgumentException("Account Id is not specified");
+        if (empty($server_key)) throw new InvalidArgumentException("Server Key is not specified");
+        if (empty($server_id)) throw new InvalidArgumentException("Server Id is not specified");
 
         $push_notification =[
             'project' => $project,
             'content' => http_build_query($content),
             'account_id' => $account_id,
+            'server_id' => $server_id,
+            'server_key' => $server_key
         ];
         $response = $this->httpBuilder->post(self::sendNotificationProject_URI,$push_notification);
         return $response;

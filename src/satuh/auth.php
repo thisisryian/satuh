@@ -4,7 +4,7 @@ use InvalidArgumentException;
 use Guzzlehttps\Psr7;
 use Guzzlehttps\Exception\BadResponseException as GuzzleException;
 use Exception;
-use httpBuilder;
+use satuh\httpBuilder;
 class auth
 {
     const AUTHO_URI = "https://account.satuh.com/oauth/authorize";

@@ -3,7 +3,7 @@ namespace satuh;
 use InvalidArgumentException;
 use Exception;
 use satuh\auth;
-use httpBuilder;
+use satuh\httpBuilder;
 class notification
 {
     const TOKEN_URI = "https://account.satuh.com/oauth/token";

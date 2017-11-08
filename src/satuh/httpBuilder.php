@@ -1,5 +1,5 @@
 <?php
-
+namespace satuh;
 class httpBuilder{
 
 

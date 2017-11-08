@@ -232,7 +232,6 @@ class auth
 
     public function getUserData($accessToken){
         $this->setAuthorization($accessToken);
-        $this->httpBuilder->setHeaders($this->defaultHeaders);
         $res = $this->httpBuilder->get(self::USER_URI);
         $res['status'] = true;
         return $res;

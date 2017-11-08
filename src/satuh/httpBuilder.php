@@ -20,7 +20,7 @@ class httpBuilder{
         curl_setopt($this->curlHandle, CURLOPT_SSL_VERIFYPEER, false);
     }
 
-    public function setHeaders($headers){
+    public function setHeaders($headers = array()){
         $this->headers = $headers;
     }
 
@@ -57,10 +57,15 @@ class httpBuilder{
 
     protected function returnResponse(){
         if($this->asJson){
-            return curl_exec($this->curlHandle);
+            $res =  curl_exec($this->curlHandle);
+            $this->httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
+            return $res;
         }
+
+        $res =  json_decode(curl_exec($this->curlHandle));
         $this->httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
-        return json_decode(curl_exec($this->curlHandle));
+        curl_close($this->curlHandle);
+        return $res;
     }
 
     public function getHttpCode(){

@@ -7,7 +7,7 @@
  */
 
 namespace satuh;
-use httpBuilder;
+use satuh\httpBuilder;
 use InvalidArgumentException;
 class pulsa
 {
@@ -25,12 +25,12 @@ class pulsa
     {
         if (empty($client_id)) throw new InvalidArgumentException("Client Id is not specified");
         if (empty($client_secret)) throw new InvalidArgumentException("Client Secret is not specified");
-
+        $this->httpBuilder = new httpBuilder();
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
         $this->curlHandle = curl_init();
         $this->authorization();
-        $this->httpBuilder = new httpBuilder();
+
     }
 
     private function authorization(){

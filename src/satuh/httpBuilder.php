@@ -58,7 +58,7 @@ class httpBuilder{
             return $res;
         }
 
-        $res =  json_decode(curl_exec($this->curlHandle));
+        $res =  json_decode(curl_exec($this->curlHandle),true);
         $this->httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
         return $res;
     }

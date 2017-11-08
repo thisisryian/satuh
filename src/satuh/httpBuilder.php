@@ -34,10 +34,6 @@ class httpBuilder{
         $this->asJson = true;
     }
 
-    public function test(){
-        return "sini";
-    }
-
     public function get($uri){
 
         $this->setCurl();
@@ -64,7 +60,6 @@ class httpBuilder{
 
         $res =  json_decode(curl_exec($this->curlHandle));
         $this->httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
-        curl_close($this->curlHandle);
         return $res;
     }
 

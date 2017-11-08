@@ -220,6 +220,7 @@ class auth
             $this->accessToken = $data["access_token"];
             $this->setAuthorization($data['access_token']);
         }
+        $this->httpBuilder->asArray();
         $data['status'] = true;
         return $data;
 

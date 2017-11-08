@@ -11,7 +11,7 @@ use satuh\httpBuilder;
 use InvalidArgumentException;
 class pulsa
 {
-    const URL = "https://epay.satuh.com/API/pulsa";
+    const URL = "https://epay.satuh.com/api/pulsa";
     protected $accessToken = null;
     protected $clientId;
     protected $clientSecret;
@@ -30,7 +30,6 @@ class pulsa
         $this->clientSecret = $client_secret;
         $this->curlHandle = curl_init();
         $this->authorization();
-
     }
 
     private function authorization(){
@@ -61,5 +60,13 @@ class pulsa
         return $this->httpBuilder->post(self::URL.'/check-transaction',['phone'=>$phone,'trxID' => $trx_id]);
     }
 
+    function productAvailable($product_id){
+        if (empty($product_id)) throw new InvalidArgumentException("Product_id is not specified");
+        return $this->httpBuilder->post(self::URL.'/check-product-id',['product_id'=> $product_id]);
+    }
+
+    function mitraInfo(){
+        return $this->httpBuilder->get(self::URL.'/mitra-info');
+    }
 
 }

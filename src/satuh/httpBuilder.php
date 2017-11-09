@@ -4,8 +4,7 @@ class httpBuilder{
 
 
     protected $curlHandle;
-    protected $asArray = true;
-    protected $asJson;
+    protected $responseAs = true;
     public $headers;
     public $httpCode;
 
@@ -24,14 +23,16 @@ class httpBuilder{
         $this->headers = $headers;
     }
 
-    public function asArray(){
-        $this->asArray = true;
-        $this->asJson = false;
+    public function asJson(){
+        $this->responseAs = false;
     }
 
-    public function asJson(){
-        $this->asArray = false;
-        $this->asJson = true;
+    public function asArray(){
+        $this->responseAs = true;
+    }
+
+    public function getResponseAs(){
+        return $this->responseAs;
     }
 
     public function get($uri){
@@ -52,13 +53,7 @@ class httpBuilder{
     }
 
     protected function returnResponse(){
-        if($this->asJson){
-            $res =  curl_exec($this->curlHandle);
-            $this->httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
-            return $res;
-        }
-
-        $res =  json_decode(curl_exec($this->curlHandle),true);
+        $res =  json_decode(curl_exec($this->curlHandle),$this->responseAs);
         $this->httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
         return $res;
     }

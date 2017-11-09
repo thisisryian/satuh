@@ -72,9 +72,9 @@ class auth
         if($authorization != null){
             $this->defaultHeaders[0] .= "Bearer ".urlencode($authorization);
         }
-        $this->httpBuilder->setHeaders();
+        $this->httpBuilder->setHeaders($this->defaultHeaders);
     }
-    
+
 
     private function isAbsoluteUri($uri)
     {
@@ -185,6 +185,13 @@ class auth
         $this->oauthCode = $code;
     }
 
+    public function asArray(){
+        $this->httpBuilder->asArray();
+    }
+
+    public function asJson(){
+        $this->httpBuilder->asJson();
+    }
 
     public function getAccessToken($grant_type){
         $params = [
@@ -209,19 +216,15 @@ class auth
             $params['grant_type'] = 'authorization_code';
             $params['code'] = $this->oauthCode;
         }
-        
-        $this->httpBuilder->setHeaders($this->defaultHeaders);
-        $this->httpBuilder->asJson();
-        $response = $this->httpBuilder->post(self::TOKEN_URI,$params);
-        $data = json_decode($response,true);
 
+        $this->httpBuilder->setHeaders($this->defaultHeaders);
+        $response = json_decode($this->httpBuilder->post(self::TOKEN_URI,$params));
+        $data = json_decode($response,true);
         $httpCode = $this->httpBuilder->getHttpCode();
         if ($httpCode >= 400) throw  new Exception( implode("\n",$data) ? : $response,$httpCode);
         if(isset($data['access_token'])){
             $this->accessToken = $data["access_token"];
         }
-
-        $data['status'] = true;
         return $data;
 
     }
@@ -233,7 +236,6 @@ class auth
     public function getUserData($accessToken){
         $this->setAuthorization($accessToken);
         $res = $this->httpBuilder->get(self::USER_URI);
-        $res['status'] = true;
         return $res;
     }
 

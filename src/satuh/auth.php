@@ -121,7 +121,7 @@ class auth
                     'Redirect URI must be absolute');
             }
         }
-       return $this->redirectUri = (string)$uri;
+        return $this->redirectUri = (string)$uri;
     }
 
     public function getRedirectUri()
@@ -218,10 +218,12 @@ class auth
         }
 
         $this->httpBuilder->setHeaders($this->defaultHeaders);
-        $response = json_decode($this->httpBuilder->post(self::TOKEN_URI,$params));
-        $data = json_decode($response,true);
+        $data = $this->httpBuilder->post(self::TOKEN_URI,$params);
+        if(!$this->httpBuilder->getResponseAs()){
+            $data = (array)$this->httpBuilder->post(self::TOKEN_URI,$params);
+        }
         $httpCode = $this->httpBuilder->getHttpCode();
-        if ($httpCode >= 400) throw  new Exception( implode("\n",$data) ? : $response,$httpCode);
+        if ($httpCode >= 400) throw  new Exception( implode("\n",$data),$httpCode);
         if(isset($data['access_token'])){
             $this->accessToken = $data["access_token"];
         }

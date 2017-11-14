@@ -19,16 +19,17 @@ class pln
     protected $ENVIROMENT;
     protected $defaultHeaders = array(
         'Authorization: ',
-        'Accept: application/json'
+        'Accept: application/json',
+        'Environment: '
     );
 
     public function __construct($client_id,$client_secret,$environment)
     {
         if (empty($client_id)) throw new InvalidArgumentException("Client Id is not specified");
         if (empty($client_secret)) throw new InvalidArgumentException("Client Secret is not specified");
-        if (empty($environment)) throw new InvalidArgumentException("Please set your enviroment");
+        if (empty($environment)) throw new InvalidArgumentException("Please set your environment");
 
-        $this->setEnviroment($environment);
+        $this->setEnvironment($environment);
         $this->httpBuilder = new httpBuilder();
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
@@ -46,9 +47,9 @@ class pln
         $this->httpBuilder->setHeaders($this->defaultHeaders);
     }
 
-    public function setEnviroment($environment){
+    public function setEnvironment($environment){
 
-        if($environment !== "production" || $environment !== "testing") throw new InvalidArgumentException("Environment could only be set to production or testing");
+        if($environment !== "production" && $environment !== "testing") throw new InvalidArgumentException("Environment could only be set to production or testing");
         $this->ENVIROMENT = $environment;
         $this->defaultHeaders[2] .= $this->ENVIROMENT;
     }

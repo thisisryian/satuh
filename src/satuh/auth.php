@@ -220,7 +220,7 @@ class auth
         $this->httpBuilder->setHeaders($this->defaultHeaders);
         $data = $this->httpBuilder->post(self::TOKEN_URI,$params);
         if(!$this->httpBuilder->getResponseAs()){
-            $data = (array)$this->httpBuilder->post(self::TOKEN_URI,$params);
+            $data = (array)$data;
         }
         $httpCode = $this->httpBuilder->getHttpCode();
         if ($httpCode >= 400) throw  new Exception( implode("\n",$data),$httpCode);

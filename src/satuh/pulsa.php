@@ -20,16 +20,16 @@ class pulsa
     protected $defaultHeaders = array(
         'Authorization: ',
         'Accept: application/json',
-        'environment: '
+        'Environment: '
     );
 
     public function __construct($client_id,$client_secret,$environment)
     {
         if (empty($client_id)) throw new InvalidArgumentException("Client Id is not specified");
         if (empty($client_secret)) throw new InvalidArgumentException("Client Secret is not specified");
-        if (empty($environment)) throw new InvalidArgumentException("Please set your enviroment");
+        if (empty($environment)) throw new InvalidArgumentException("Please set your environment");
 
-        $this->setEnviroment($environment);
+        $this->setEnvironment($environment);
 
         $this->httpBuilder = new httpBuilder();
         $this->clientId = $client_id;
@@ -49,9 +49,9 @@ class pulsa
         $this->httpBuilder->setHeaders($this->defaultHeaders);
     }
 
-    public function setEnviroment($environment){
+    public function setEnvironment($environment){
 
-        if($environment !== "production" || $environment !== "testing") throw new InvalidArgumentException("Environment could only be set to production or testing");
+        if($environment !== "production" && $environment !== "testing") throw new InvalidArgumentException("Environment could only be set to production or testing");
         $this->ENVIROMENT = $environment;
         $this->defaultHeaders[2] .= $this->ENVIROMENT;
     }
@@ -63,6 +63,7 @@ class pulsa
     function asJson(){
         $this->httpBuilder->asJson();
     }
+
 
     function getPulsaList($phone){
         if (empty($phone)) throw new InvalidArgumentException("Phone is not specified");

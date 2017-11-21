@@ -7,7 +7,6 @@
  */
 
 namespace satuh;
-use satuh\httpBuilder;
 use InvalidArgumentException;
 class pln
 {

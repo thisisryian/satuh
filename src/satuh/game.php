@@ -2,15 +2,16 @@
 /**
  * Created by PhpStorm.
  * User: lenovo
- * Date: 07/11/2017
- * Time: 10.04
+ * Date: 15/11/2017
+ * Time: 09.06
  */
 
 namespace satuh;
 use InvalidArgumentException;
-class pulsa
+
+class game
 {
-    const URL = "https://epay.satuh.com/api/pulsa";
+    const URL = "https://epay.satuh.com/api/voucher-game";
     protected $accessToken = null;
     protected $clientId;
     protected $clientSecret;
@@ -63,21 +64,19 @@ class pulsa
         $this->httpBuilder->asJson();
     }
 
-
-    function getPulsaList($phone){
-        if (empty($phone)) throw new InvalidArgumentException("Phone is not specified");
-        return $this->httpBuilder->post(self::URL,['phone'=>$phone]);
+    function getVoucherList(){
+        return $this->httpBuilder->get(self::URL);
     }
 
-    function payment($product_id,$price,$phone){
+    function payment($product_id,$amount){
         if (empty($product_id)) throw new InvalidArgumentException("Product_id is not specified");
-        if (empty($price)) throw new InvalidArgumentException("Price is not specified");
-        if (empty($phone)) throw new InvalidArgumentException("Phone is not specified");
-        return $this->httpBuilder->post(self::URL.'/payment',['phone'=>$phone,'product_id'=> $product_id,'price' => $price]);
+        if (empty($amount)) throw new InvalidArgumentException("Price is not specified");
+        return $this->httpBuilder->post(self::URL.'/payment',['product_id'=> $product_id, 'amount'=> $amount]);
     }
-    function checkTransaction($pulsa_request_id){
-        if (empty($pulsa_request_id)) throw new InvalidArgumentException("Pulsa Request Id is not specified");
-        return $this->httpBuilder->post(self::URL.'/check-transaction',['pulsa_request_id'=> $pulsa_request_id]);
+
+    function checkTransaction($voucher_game_request_id){
+        if (empty($voucher_game_request_id)) throw new InvalidArgumentException("Voucher Game Request Id is not specified");
+        return $this->httpBuilder->post(self::URL.'/check-transaction',['voucher_game_request_id'=> $voucher_game_request_id]);
     }
 
     function productAvailable($product_id){

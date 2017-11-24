@@ -7,6 +7,7 @@ class httpBuilder{
     protected $responseAs = true;
     public $headers;
     public $httpCode;
+    public $responseHeader;
 
     public function __construct()
     {
@@ -14,7 +15,10 @@ class httpBuilder{
     }
 
     private function setCurl(){
+
         curl_setopt( $this->curlHandle, CURLOPT_HTTPHEADER, $this->headers);
+        curl_setopt($this->curlHandle, CURLOPT_VERBOSE, 1);
+        curl_setopt($this->curlHandle, CURLOPT_HEADER, 1);
         curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, true );
         curl_setopt($this->curlHandle, CURLOPT_SSL_VERIFYPEER, false);
     }
@@ -53,9 +57,22 @@ class httpBuilder{
     }
 
     protected function returnResponse(){
-        $res =  json_decode(curl_exec($this->curlHandle),$this->responseAs);
+        $response = curl_exec($this->curlHandle);
+        $header_size = curl_getinfo($this->curlHandle, CURLINFO_HEADER_SIZE);
+        $response_header = substr($response, 0, $header_size);
+        $this->responseHeader = $response_header;
+        $res =  json_decode($response,$this->responseAs);
         $this->httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
-        return $res;
+        if(is_string($response)){
+            return $response;
+        }else{
+            return $res;
+        }
+
+    }
+
+    public function getResponseHeader(){
+        return $this->responseHeader;
     }
 
     public function getHttpCode(){

@@ -29,7 +29,6 @@ class notification
 
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
-        $this->curlHandle = curl_init();
         $this->httpBuilder = new httpBuilder();
         $this->authorization();
     }

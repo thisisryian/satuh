@@ -15,7 +15,7 @@ class pulsa
     protected $clientId;
     protected $clientSecret;
     protected $httpBuilder;
-    protected $ENVIROMENT;
+    protected $ENVIRONMENT;
     protected $defaultHeaders = array(
         'Authorization: ',
         'Accept: application/json',
@@ -33,7 +33,6 @@ class pulsa
         $this->httpBuilder = new httpBuilder();
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
-        $this->curlHandle = curl_init();
         $this->authorization();
 
     }
@@ -51,8 +50,8 @@ class pulsa
     public function setEnvironment($environment){
 
         if($environment !== "production" && $environment !== "testing") throw new InvalidArgumentException("Environment could only be set to production or testing");
-        $this->ENVIROMENT = $environment;
-        $this->defaultHeaders[2] .= $this->ENVIROMENT;
+        $this->ENVIRONMENT = $environment;
+        $this->defaultHeaders[2] .= $this->ENVIRONMENT;
     }
 
     function asArray(){

@@ -19,7 +19,8 @@ class httpBuilder{
         curl_setopt( $this->curlHandle, CURLOPT_HTTPHEADER, $this->headers);
         curl_setopt($this->curlHandle, CURLOPT_VERBOSE, 1);
         curl_setopt($this->curlHandle, CURLOPT_HEADER, 0);
-        curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, 1 );
+        curl_setopt( $this->curlHandle, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->curlHandle, CURLOPT_SSL_VERIFYPEER, false);
     }
 
     public function setHeaders($headers = array()){

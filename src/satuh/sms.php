@@ -11,18 +11,12 @@ use InvalidArgumentException;
 
 class sms
 {
-
-
-
     protected $httpBuilder;
     protected $ENVIRONMENT;
     protected $cachePath;
     protected $username;
     protected $password;
-    protected $defaultHeaders = array(
-        'Authorization: ',
-        'Accept: application/json',
-    );
+    protected $defaultHeaders = [];
 
     public function __construct($username,$password,$environment)
     {
@@ -34,6 +28,7 @@ class sms
         $this->username = $username;
         $this->password = $password;
         $this->httpBuilder = new httpBuilder();
+        $this->httpBuilder->setHeaders($this->defaultHeaders);
     }
 
     public function setEnvironment($environment){

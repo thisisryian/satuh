@@ -5,7 +5,7 @@ class httpBuilder{
 
     protected $curlHandle;
     protected $responseAs = true;
-    public $headers;
+    public $headers = [];
     public $httpCode;
     public $responseHeader;
 
@@ -63,12 +63,7 @@ class httpBuilder{
         $this->responseHeader = $response_header;
         $res =  json_decode($response,$this->responseAs);
         $this->httpCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
-        if(is_string($response)){
-            return $response;
-        }else{
-            return $res;
-        }
-
+        return $res;
     }
 
     public function getResponseHeader(){

@@ -67,6 +67,9 @@ class httpBuilder{
 
     protected function returnResponse(){
         $response = curl_exec($this->curlHandle);
+        if($response == false){
+            throw new \Exception(curl_error($this->curlHandle), curl_errno($this->curlHandle));
+        }
         $header_size = curl_getinfo($this->curlHandle, CURLINFO_HEADER_SIZE);
         $response_header = substr($response, 0, $header_size);
         $this->responseHeader = $response_header;

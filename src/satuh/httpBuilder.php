@@ -56,6 +56,15 @@ class httpBuilder{
         return $this->returnResponse();
     }
 
+    public function put($uri,$array_post)
+    {
+        $this->setCurl();
+        curl_setopt( $this->curlHandle, CURLOPT_PUT, 1 );
+        curl_setopt($this->curlHandle,CURLOPT_URL,$uri);
+        curl_setopt($this->curlHandle,CURLOPT_POSTFIELDS, $array_post);
+        return $this->returnResponse();
+    }
+
     protected function returnResponse(){
         $response = curl_exec($this->curlHandle);
         $header_size = curl_getinfo($this->curlHandle, CURLINFO_HEADER_SIZE);

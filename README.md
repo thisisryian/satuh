@@ -23,8 +23,9 @@ satuh\auth is authentication to access our lib. Also to grant our Satuh User inf
 use satuh\auth;
 
 $satuh = new auth("CLIENT_ID","CLIENT_SECRET","CLIENT_REDIRECT_URI");
-$satuh->authorize('code');
-//this action will give u an authenticaion code in your CLIENT_REDIRECT_URI
+$satuh->authorize('code'); //this action will give you an authenticaion code in your CLIENT_REDIRECT_URI
+//under your redirect uri;
+
 $code = $_GET['code'];
 $satuh->setOauthCode($code);
 $accessToken = $satuh->getAccessToken('authorization_code');
@@ -37,6 +38,9 @@ print_r($user);
 
 #### Basic Examples ###
 ```php
+<?php 
+use satuh\pulsa;
+
 $pulsa = new pulsa("CLIENT_ID","CLIENT_SECRET","ENVIRONMENT");
 ```
 
@@ -44,6 +48,9 @@ $pulsa = new pulsa("CLIENT_ID","CLIENT_SECRET","ENVIRONMENT");
 
 #### Basic Examples ###
 ```php
+<?php 
+use satuh\pln;
+
 $pln = new pln("CLIENT_ID","CLIENT_SECRET","ENVIRONMENT");
 ```
 
@@ -51,6 +58,9 @@ $pln = new pln("CLIENT_ID","CLIENT_SECRET","ENVIRONMENT");
 
 #### Basic Examples ###
 ```php
+<?php 
+use satuh\game;
+
 $game = new game("CLIENT_ID","CLIENT_SECRET","ENVIRONMENT");
 ```
 
@@ -66,6 +76,9 @@ For more information, see the official [API documents]. If it's your first time 
 
 #### Basic Examples ###
 ```php
+<?php 
+use satuh\sms;
+
 $sms = new sms("USERNAME","PASSWORD","ENVIRONMENT");
 $reponse = $sms->send_sms("phone","message",true)
 ```

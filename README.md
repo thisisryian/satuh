@@ -15,7 +15,7 @@ Install this libary through  [composer](https://getcomposer.org).
 
 ## Usage ##
 ### satuh\auth
-satuh\auth is authentication to access our lib. Also to grant our Satuh User information, which u can access it for your login application.
+satuh\auth is authentication to access our lib. Also to grant our Satuh User information, which you can access it for your login application.
 #### Basic Example ####
 
 ```php

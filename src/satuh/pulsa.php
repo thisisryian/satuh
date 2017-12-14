@@ -62,7 +62,6 @@ class pulsa
         $this->httpBuilder->asJson();
     }
 
-
     function getPulsaList($phone){
         if (empty($phone)) throw new InvalidArgumentException("Phone is not specified");
         return $this->httpBuilder->post(self::URL,['phone'=>$phone]);

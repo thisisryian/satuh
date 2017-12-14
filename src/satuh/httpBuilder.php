@@ -1,8 +1,6 @@
 <?php
 namespace satuh;
 class httpBuilder{
-
-
     protected $curlHandle;
     protected $responseAs = true;
     public $headers = [];

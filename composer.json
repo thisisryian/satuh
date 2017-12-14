@@ -2,7 +2,6 @@
     "name": "pmb/satuh",
     "description": "Satuh Applicaiton",
     "require": {
-        "guzzlehttp/guzzle": "^6.3",
         "guzzlehttp/psr7": "^1.4",
         "php": ">=7.0"
     },

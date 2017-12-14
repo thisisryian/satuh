@@ -2,7 +2,6 @@
 namespace satuh;
 use InvalidArgumentException;
 use Guzzlehttps\Psr7;
-use Guzzlehttps\Exception\BadResponseException as GuzzleException;
 use Exception;
 use satuh\httpBuilder;
 class auth

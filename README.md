@@ -9,7 +9,7 @@ Satuh Libarry enables you to work with Satuh APIs such as Satuh Authentication, 
 * [PHP 7.0.0 or higher](http://www.php.net/)
 
 ## Installation ##
-Install this library through  [composer](https://getcomposer.org).
+Install this libary through  [composer](https://getcomposer.org).
 
     composer require pmb/satuh:^0.2.2.4
 

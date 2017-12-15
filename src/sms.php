@@ -1,14 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lenovo
- * Date: 05/12/2017
- * Time: 09.06
- */
-
 namespace satuh;
 use InvalidArgumentException;
-
 class sms
 {
     protected $httpBuilder;
@@ -51,7 +43,6 @@ class sms
 
             file_put_contents($this->cachePath. time().'_'. ".html", $data);
         }
-
         if($this->ENVIRONMENT == 'production')
         {
             if($default_provider){
@@ -59,14 +50,11 @@ class sms
             }else{
                 return $this->go_sms_gateway($to,$message);
             }
-
         }
     }
 
-
     private function sms_gateway($to,$msg)
     {
-
         $auth=MD5($this->username.$this->password.$to);
         $msg=urlencode($msg);
         $response = $this->httpBuilder->get("http://send.smsgateway.co.id:8080/web2sms/api/SendSMS.aspx?username=".$this->username."&mobile=".$to."&message=".$msg."&auth=".$auth);

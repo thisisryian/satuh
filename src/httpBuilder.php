@@ -83,6 +83,4 @@ class httpBuilder{
     public function getHttpCode(){
         return $this->httpCode;
     }
-
-
 }

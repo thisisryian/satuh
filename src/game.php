@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lenovo
- * Date: 15/11/2017
- * Time: 09.06
- */
-
 namespace satuh;
 use InvalidArgumentException;
 
@@ -49,7 +42,6 @@ class game
     }
 
     public function setEnvironment($environment){
-
         if($environment !== "production" && $environment !== "testing") throw new InvalidArgumentException("Environment could only be set to production or testing");
         $this->ENVIRONMENT = $environment;
         $this->defaultHeaders[2] .= $this->ENVIRONMENT;
@@ -86,5 +78,4 @@ class game
     function mitraInfo(){
         return $this->httpBuilder->get(self::URL.'/mitra-info');
     }
-
 }

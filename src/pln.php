@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lenovo
- * Date: 07/11/2017
- * Time: 10.04
- */
-
 namespace satuh;
 use InvalidArgumentException;
 class pln
@@ -73,9 +66,7 @@ class pln
         return $this->httpBuilder->post(self::URL.'/payment',['product_code'=>$product_code,'pln_id' => $pln_id,'nominal' => $nominal]);
     }
 
-
     function mitraInfo(){
         return $this->httpBuilder->get(self::URL.'/mitra-info');
     }
-
 }

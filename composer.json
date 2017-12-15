@@ -12,6 +12,6 @@
         }
     ],
     "autoload": {
-        "psr-4": {"satuh\\": "src/satuh"}
+        "psr-4": {"satuh\\": "src/"}
     }
 }

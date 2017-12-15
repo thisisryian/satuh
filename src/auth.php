@@ -10,9 +10,9 @@ class auth
     const TOKEN_URI = "https://account.satuh.com/oauth/token";
     const USER_URI = "https://account.satuh.com/api/user";
     const LOGOUT_URI = "https://account.satuh.com/api/logout";
-    private $redirectUri = null;
     private $clientSecret;
     private $clientId;
+    private $redirectUri;
     private $scope;
     protected $accessToken = null;
     protected $tokenId;
@@ -42,14 +42,11 @@ class auth
      *
      * - accessToken
      *   The current access token for this client.
-     *
-     * @param array $config Configuration array
      */
 
     protected $defaultHeaders = array(
         'Authorization: ',
         'Accept: application/json'
-
     );
 
     public function __construct($client_id = null,$client_secret=null,$redirect_uri=null)
@@ -113,7 +110,6 @@ class auth
         if (is_null($uri)) {
             $this->redirectUri = null;
         }
-        // redirect URI must be absolute
         if (!$this->isAbsoluteUri($uri)) {
             if ('postmessage' !== (string)$uri) {
                 throw new InvalidArgumentException(
@@ -245,5 +241,4 @@ class auth
         $res = $this->httpBuilder->get(self::LOGOUT_URI);
         return $res;
     }
-
 }

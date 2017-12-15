@@ -1,7 +1,6 @@
 <?php
 namespace satuh;
 use InvalidArgumentException;
-use Exception;
 use satuh\auth;
 use satuh\httpBuilder;
 class notification
@@ -14,12 +13,9 @@ class notification
     protected $clientId;
     protected $clientSecret;
     protected $httpBuilder;
-    
-
     public $defaultHeaders = array(
         'Authorization: ',
         'Accept: application/json'
-
     );
 
     function __construct($client_id,$client_secret)
@@ -63,14 +59,12 @@ class notification
         $response = $this->httpBuilder->post(self::insertToken_URI,($token_data));
         return $response;
     }
-    
 
     public function sendNotificationProject($project,$content,$server_key,$server_id){
         if (empty($project)) throw new InvalidArgumentException("Project is not specified");
         if (empty($content)) throw new InvalidArgumentException("Please set your content message");
         if (empty($server_key)) throw new InvalidArgumentException("Server Key is not specified");
         if (empty($server_id)) throw new InvalidArgumentException("Server Id is not specified");
-
         $push_notification =[
             'project' => $project,
             'content' => http_build_query($content),

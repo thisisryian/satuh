@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lenovo
- * Date: 07/11/2017
- * Time: 10.04
- */
-
 namespace satuh;
 use InvalidArgumentException;
 class pulsa
@@ -34,7 +27,6 @@ class pulsa
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
         $this->authorization();
-
     }
 
     private function authorization(){
@@ -86,5 +78,4 @@ class pulsa
     function mitraInfo(){
         return $this->httpBuilder->get(self::URL.'/mitra-info');
     }
-
 }

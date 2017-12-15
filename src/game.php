@@ -23,12 +23,10 @@ class game
         if (empty($environment)) throw new InvalidArgumentException("Please set your environment");
 
         $this->setEnvironment($environment);
-
         $this->httpBuilder = new httpBuilder();
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
         $this->authorization();
-
     }
 
     private function authorization(){

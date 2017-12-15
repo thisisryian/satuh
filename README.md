@@ -11,7 +11,7 @@ Satuh Libarry enables you to work with Satuh APIs such as Satuh Authentication, 
 ## Installation ##
 Install this libary through  [composer](https://getcomposer.org).
 
-    composer require pmb/satuh:^0.3.0
+    composer require pmb/satuh:^0.3.1
 
 ## Usage ##
 ### satuh\auth

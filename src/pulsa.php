@@ -81,7 +81,7 @@ class pulsa
     }
 
     function transactionHistory(){
-        return $this->httpBuilder->get(self::URL.'/transaction-history/');
+        return $this->httpBuilder->get(self::URL.'/transaction-history');
     }
 
 }

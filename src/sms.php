@@ -73,4 +73,11 @@ class sms
             return false;
         }
     }
+
+    function check_go_sms_balance(){
+
+        $response = $this->httpBuilder->get('https://secure.gosmsgateway.com/api/creditsLeft.php?username='.$this->username."&auth=".md5($this->username.$this->password));
+        return $response;
+
+    }
 }

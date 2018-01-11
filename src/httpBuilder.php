@@ -63,6 +63,29 @@ class httpBuilder{
         return $this->returnResponse();
     }
 
+    public function delete($uri){
+        $this->setCurl();
+        curl_setopt( $this->curlHandle, CURLOPT_CUSTOMREQUEST, "DELETE" );
+        curl_setopt($this->curlHandle,CURLOPT_URL,$uri);
+        return $this->returnResponse();
+    }
+
+    public function patch($uri,$array_post){
+        $this->setCurl();
+        curl_setopt( $this->curlHandle, CURLOPT_CUSTOMREQUEST, "PATCH" );
+        curl_setopt($this->curlHandle,CURLOPT_URL,$uri);
+        curl_setopt($this->curlHandle,CURLOPT_POSTFIELDS, $array_post);
+        return $this->returnResponse();
+    }
+
+    public function update($uri,$array_post){
+        $this->setCurl();
+        curl_setopt( $this->curlHandle, CURLOPT_CUSTOMREQUEST, "UPDATE" );
+        curl_setopt($this->curlHandle,CURLOPT_URL,$uri);
+        curl_setopt($this->curlHandle,CURLOPT_POSTFIELDS, $array_post);
+        return $this->returnResponse();
+    }
+
     protected function returnResponse(){
         $response = curl_exec($this->curlHandle);
         if($response == false){
